@@ -1,0 +1,25 @@
+<p> Usuario: <%= @user.name %> </p>
+
+<div style="display: flex; justify-content: space-around">
+    <div>
+        <h3> libros reservados </h3>
+        <ul>
+            <% @user.books.each do |i| %>
+                <% unless i.payed == true %>
+                    <li> <%= i.title %> || <%= link_to 'comprar', bu_path(pagar: i.id), method: :patch %> || <%= link_to 'eliminar', bu_path(destroy_reserve: i.id), method: :patch %> </li>
+                <% end %>
+            <% end %>
+        </ul>
+    </div>
+    <div>
+        <h3> libros comprados </h3>
+        <ul>
+            <% @user.books.each do |i| %>
+                <% if i.payed == true %>
+                    <li> <%= i.title %> || <%= link_to 'comprar', bu_path(pagar: i.id)%> || <%= link_to 'eliminar', bu_path(devolver: i.id), method: :patch, data: {confirm: 'seguro que lo quiere devolver?'} %> </li>
+                <% end %>        
+            <% end %>
+        </ul>
+    </div>
+</div>
+<%= link_to 'volver al inicio', root_path %>

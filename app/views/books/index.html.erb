@@ -1,0 +1,38 @@
+<% if session[:user] %>
+    <%= link_to 'cerrar sesion', ud_path, method: :delete %>
+    <p> estas identificado como <%= @user_active.name %> || <%= link_to 'ir a tu index', ui_path %> </p>
+    
+    <h3> aqui puedes pedir un libro que no este disponible para reservar o comprar </h3>
+    <%= form_with(url: bc_path, model: @new_book, local: true) do |n| %>
+        <%= n.text_field :title, placeholder: 'escribe el titulo' %>
+        <%= n.text_field :author, placeholder: 'escribe el autor' %>
+        <%= n.submit 'solicitar libro'%>
+    <% end %>
+<% else %>
+    <h3> si no estas inscrito, inscribete para poder pedir libros </h3>
+    <%= form_with(url: uc_path, model: @user, local:true) do |f| %>
+        <%= f.text_field :name, placeholder: 'escribe tu nombre' %>
+        <%= f.submit 'inscribirse' %>
+    <% end %>
+    <br>
+    <br>
+    <h3> Si ya estas inscrito identificate aqui </h3>
+
+    <%= form_with(url: login_path, local: true) do |u| %>
+        <%= u.select :id_user, options_from_collection_for_select(@users, :id, :name), prompt: 'selecciona tu nombre' %>
+        <%= u.submit 'identificarse' %>
+    <% end %>
+<% end %>
+
+
+<h2> Libros disponibles </h2>
+<% @books_available.each do |book| %>
+    <ul>
+        <li> titulo: <%= book.title %> </li>
+        <li> autor: <%= book.author %> </li>
+        <% if session[:user] %>
+            <li> <%= link_to 'reservar', bu_path(id: book.id), method: :patch %> </li>
+        <% end %>
+    </ul>
+<% end %>
+
